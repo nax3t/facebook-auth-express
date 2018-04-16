@@ -17,6 +17,7 @@ const configDB 		 = require('./config/database.js')
 const https 			 = require('https')
 const fs 					 = require('fs')
 
+// configure https options for localhost
 const options 		 = {
   key: fs.readFileSync( './server.key' ),
   cert: fs.readFileSync( './server.crt' ),
@@ -24,8 +25,8 @@ const options 		 = {
   rejectUnauthorized: false
 }
 
-// configuration ===============================================================
-mongoose.connect(configDB.url) // connect to our database
+// connect to the database
+mongoose.connect(configDB.url)
 
 // load our routes
 const userRoutes = require('./routes/users')
