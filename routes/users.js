@@ -1,38 +1,21 @@
 const express = require('express')
 const router  = express.Router()
 const { isLoggedIn } = require('../middleware')
-const passport = require('passport')
-
-require('../config/passport')(passport)
+const userController = require('../controllers/userController')
 
 // route for home page
-router.get('/', (req, res, next) => {
-    res.render('index') // load the index.ejs file
-})
+router.get('/', userController.index)
 
 // route for showing the profile page
-router.get('/profile', isLoggedIn, (req, res, next) => {
-    res.render('profile', {
-        user : req.user // get the user out of session and pass to template
-    })
-})
+router.get('/profile', isLoggedIn, userController.profileGet)
 
 // route for facebook authentication and login
-router.get('/auth/facebook', passport.authenticate('facebook', { 
-  scope : 'public_profile'
-}))
+router.get('/auth/facebook', userController.authFacebookGet)
 
 // handle the callback after facebook has authenticated the user
-router.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-        successRedirect: '/profile',
-        failureRedirect: '/'
-    }))
+router.get('/auth/facebook/callback', userController.authFacebookCallbackGet)
 
 // route for logging out
-router.get('/logout', (req, res, next) => {
-    req.logout()
-    res.redirect('/')
-})
+router.get('/logout', userController.logoutGet)
 
 module.exports = router
